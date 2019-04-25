@@ -6,58 +6,70 @@ public class Grid : MonoBehaviour
 {
 
     private GameObject[,] tiles;
-    public GameObject[] Player; 
-
-    //private GameObject[] tileArray = new GameObject[4];
 
     public Vector3 Origin;
     public int width;
     public int height; 
 
     public GameObject tileinstance; // giving a reference to what we are instantiating (the gameobject) 
-    public GameObject Playerinstance;
 
     public List<Color> colorList = new List<Color>();
 
-    //public Color red = Color.red;
-    //public Color black = Color.black;
-    //public Color blue = Color.blue;
-    //public Color yellow = Color.yellow;
-    //public Color magenta = Color.magenta;
-    //public Color cyan = Color.cyan;
-
     private void Awake() // awake to instantiate numbers
     {
-        tiles = new GameObject[width, height]; //2D array
+        tiles = new GameObject[width, height]; //2D array, array of gameobjects
+
+        for (int j = 0; j < height; j++) // j = cols
+        {
+
+            for (int i = 0; i < width; i++) // i = rows
+            {
+                tiles[i, j] = Instantiate(tileinstance, Origin + new Vector3(i, j, 0), Quaternion.identity);
+                tiles[i, j].GetComponent<SpriteRenderer>().color = colorList[Random.Range(0, 6)];
+                tiles[i, j].GetComponent<Tile>().coordX = i;
+                tiles[i, j].GetComponent<Tile>().coordY = j;
+            }
+        }
     }
 
     private void Start()  
     {
-        //GameObject Player = Instantiate(Playerinstance, new Vector3(0, 0, 0), Quaternion.identity); // creating a new tile + filling it
-        //GameObject tile2 = Instantiate(tileinstance, new Vector3(1, 0, 0), Quaternion.identity); 
 
-        int counterX = 0;
-        //int counterY = 0;
-
-        for (int j = 0; j < height; j++) // j = cols
-        {
-        
-            for (int i = 0; i < width; i++) // i = rows
-            {
-                tiles[i,j] = Instantiate(tileinstance, Origin + new Vector3(i,j,0), Quaternion.identity);
-                counterX++;
-                tiles[i, j].GetComponent<SpriteRenderer>().color = colorList[Random.Range(0, 6)];
-
-            }
-
-            //counterX = 0;
-            //counterY++;
-
-        }
-
-        //tiles[0, 0].GetComponent<SpriteRenderer>().color = colorList[Random.Range(0, 5)];
-        //tiles[1, 0].GetComponent<SpriteRenderer>().color = colorList[Random.Range(0, 6)];
-        //tiles[2, 0].GetComponent<SpriteRenderer>().color = colorList[Random.Range(0, 6)];
-        //tiles[3, 0].GetComponent<SpriteRenderer>().color = colorList[Random.Range(0, 6)];
     }
+
+        //GameObject tile = tiles[Random.Range(0, width), Random.Range(0, height)];
+        //GameObject player = Instantiate(Playerinstance, tile.transform.position, Quaternion.identity);
+
+        //Destroy(tile);
+    
+
+    public Vector3 GiveMeTilePosition()
+    {
+        return tiles[Random.Range(0, width), Random.Range(0, height)].transform.position;
+    }
+
+    public Tile GiveMeTileThenDelete()
+    {
+        int x = Random.Range(0, width);
+        int y = Random.Range(0, height);
+
+        Tile tile = tiles[x, y].GetComponent<Tile>();
+
+        Destroy(tiles[x, y]);
+
+        return tile;
+    }
+
+    public Vector3 GetTilePosition(int x, int y)
+    {
+        return tiles[x, y].transform.position;
+    }
+
+    public Tile GetTile (int x, int y)
+    {
+        return tiles[x, y].GetComponent<Tile>();
+    }
+
 }
+
+
